@@ -2,13 +2,11 @@ package com.group.libraryapp.controller.user;
 
 import com.group.libraryapp.domain.user.User;
 import com.group.libraryapp.dto.user.request.UserCreateRequest;
+import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,22 +26,13 @@ public class UserController {
 
     @PostMapping("/user")
     public void saveUser(@RequestBody UserCreateRequest request) {
-        //users.add(new User(request.getName(), request.getAge()));
-
         String sql = "insert into user (name, age) values (?,?)";
         jdbcTemplate.update(sql, request.getName(), request.getAge());
     }
 
     @GetMapping("/user")
     public List<UserResponse> getUsers() {
-/*        List<UserResponse> responses = new ArrayList<>();
 
-        for (int i = 0; i < users.size(); i++) {
-            //responses.add(new UserResponse(i + 1, users.get(i).getName(), users.get(i).getAge()));
-            responses.add(new UserResponse(i + 1, users.get(i)));
-        }
-        return responses;*/
-        
         String sql = "select * from user";
         // 위 sql 코드로 인한 결과들을 작성한 로직에 따라 UserResponse 바꿔주는 부분
         //mapRow의 역할 : 유저 정보를 내가 선언한 타입인 UserResponse 로 바꿔주는 역할을 수행하는 함수
@@ -54,5 +43,18 @@ public class UserController {
             return new UserResponse(id, name, age);
 
         });
+    }
+
+    @PutMapping("/user")
+    public void updateUser(@RequestBody UserUpdateRequest request) {
+        String sql = "update user set name = ? where id = ?";
+        jdbcTemplate.update(sql, request.getName(), request.getId());
+    }
+
+    @DeleteMapping("/user")
+    public void deleteUser(@RequestParam String name) {
+        String sql = "delete from user where name = ?";
+        // 여기서 update는 sql update가 아닌 데이터의 변화를 뜻함
+        jdbcTemplate.update(sql, name);
     }
 }
