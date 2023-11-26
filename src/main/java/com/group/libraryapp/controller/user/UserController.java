@@ -47,14 +47,31 @@ public class UserController {
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdateRequest request) {
+
+        // 예외 처리 ( 원래 없은 이름을 삭제해도 200 OK가 뜸)
+        String readSQL = "select * from user where id = ?";
+        boolean isUserNotExist = jdbcTemplate.query(readSQL, (rs, rowNum) -> 0, request.getId()).isEmpty(); // 비어있으면 true
+        if(isUserNotExist){
+            throw new IllegalArgumentException();
+        }
+
         String sql = "update user set name = ? where id = ?";
         jdbcTemplate.update(sql, request.getName(), request.getId());
     }
 
     @DeleteMapping("/user")
     public void deleteUser(@RequestParam String name) {
+        // 예외 처리 ( 원래 없은 이름을 삭제해도 200 OK가 뜸)
+        String readSQL = "select * from user where name = ?";
+        boolean isUserNotExist = jdbcTemplate.query(readSQL, (rs, rowNum) -> 0, name).isEmpty(); // 비어있으면 true
+        if(isUserNotExist){
+            throw new IllegalArgumentException();
+        }
+
         String sql = "delete from user where name = ?";
         // 여기서 update는 sql update가 아닌 데이터의 변화를 뜻함
         jdbcTemplate.update(sql, name);
     }
+
+
 }
