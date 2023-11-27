@@ -4,20 +4,25 @@ import com.group.libraryapp.dto.user.request.UserCreateRequest;
 import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
 import com.group.libraryapp.service.user.UserService;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+    @RestController의 기능
+    1. 설정한 클래스를 Controller로 등록 (api 진입 지점으로 해주는 것)
+    2. 설정한 클래스를 스프링 빈으로 등록 !!
+ */
 @RestController
+
 public class UserController {
 
     private final UserService userService;
 
 
     // jdbc 탬플릿을 생성자에 직접 넣어주지 않아도 스프링이 알아서 JDBC 템플릿을 넣어줌
-    public UserController(JdbcTemplate jdbcTemplate) {
-        this.userService = new UserService(jdbcTemplate);
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/user")

@@ -4,16 +4,17 @@ import com.group.libraryapp.dto.user.request.UserCreateRequest;
 import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
 import com.group.libraryapp.repository.user.UserRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service // 스프링 빈으로 설정
 public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(JdbcTemplate jdbcTemplate) {
-        userRepository = new UserRepository(jdbcTemplate);
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     // 컨트롤러가 객체로 변환한 것을 그냥 받을 거기 때문에 @RequestBody를 쓰지 않음
