@@ -19,7 +19,6 @@ public class UserController {
 
     private final UserService userService;
 
-
     // jdbc 탬플릿을 생성자에 직접 넣어주지 않아도 스프링이 알아서 JDBC 템플릿을 넣어줌
     public UserController(UserService userService) {
         this.userService = userService;
